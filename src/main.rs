@@ -7,11 +7,15 @@ mod utils;
 use api::route::create_router;
 use config::Config;
 use database::postgres::init_db_pool;
-use std::sync::Arc;
 use tokio::net::TcpListener;
 use tower_http::cors::{Any, CorsLayer};
 use tower_http::trace::TraceLayer;
 use utils::logging::{init_logging, log_request};
+use axum::{
+    Router,
+    http::{HeaderName, HeaderValue, Method},
+};
+use std::sync::Arc;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -30,7 +34,15 @@ async fn main() -> anyhow::Result<()> {
     let state = Arc::new(api::AppState::new(pool));
 
     // CORS and tracing middleware
-    let cors = CorsLayer::new().allow_origin(Any).allow_methods(Any); // CORS wildcard
+    let cors = CorsLayer::new()
+        // Allow requests from your frontend origin
+        .allow_origin("http://localhost:4321".parse::<HeaderValue>().unwrap())
+        // Allow GET, POST, PUT, DELETE methods
+        .allow_methods([Method::GET, Method::POST, Method::PUT, Method::DELETE, Method::OPTIONS])
+        // Allow content-type header
+        .allow_headers([HeaderName::from_static("content-type")])
+        // Allow credentials (cookies, authorization headers, etc.)
+        .allow_credentials(true);
     let trace = TraceLayer::new_for_http(); // HTTP tracing
 
     // Build and run the Axum app
