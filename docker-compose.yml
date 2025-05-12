@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: url_shortener_db
+    volumes:
+      - db_data:/var/lib/postgresql/data   # persist DB files :contentReference[oaicite:2]{index=2}
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://user:password@postgres:5432/url_shortener_db
+      BASE_URL: http://localhost:8080
+      SERVER_ADDR: 0.0.0.0:8080
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+volumes:
+  db_data:     # named volume for persistent Postgres storage :contentReference[oaicite:3]{index=3}
+
+networks:
+  app-network:   # custom bridge network (optional, but explicit) :contentReference[oaicite:4]{index=4}

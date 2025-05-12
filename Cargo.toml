@@ -1,0 +1,42 @@
+[package]
+name = "url_shortener-rs"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+# Web framework and HTTP server
+axum = "0.8.4"
+
+# Async runtime
+tokio = { version = "1.45.0", features = ["full"] }
+
+# Database toolkit (PostgreSQL) with compile-time checked queries
+sqlx = { version = "0.8.5", default-features = false, features = ["postgres", "runtime-tokio-native-tls", "macros", "migrate", "chrono"] }
+
+# Environment variable loader
+dotenv = "0.15.0"
+
+# Serialization / Deserialization
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.140"
+
+# Date/time handling with Serde support
+chrono = { version = "0.4.41", features = ["serde"] }
+
+# HTTP middleware: CORS and tracing
+tower-http = { version = "0.6.2", features = ["cors", "trace"] }
+
+# UUID generation (v4) with Serde support
+uuid = { version = "1.16.0", features = ["serde", "v4"] }
+
+# Structured logging and tracing
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.19", default-features = false, features = ["std", "fmt" , "env-filter"]}
+
+# Underlying HTTP library utilities
+hyper = { version = "1.0", features = ["full"] }
+http-body-util = "0.1.0"
+hyper-util = { version = "0.1.0", features = ["full"] }
+
+# Ergonomic error handling
+anyhow = "1.0.98"
