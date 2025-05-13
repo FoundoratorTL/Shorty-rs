@@ -35,7 +35,9 @@ Below is a suggested `README.md` for your Rust/Axum project, organized for clari
 2. **Create a `.env`** (or `.env.local`) file based on the sample:
 
    ```text
-   DATABASE_URL=postgres://username:password@localhost/db_name
+   DATABASE_URL=postgres://postgres:4844@localhost/shorty
+   SERVER_ADDR=127.0.0.1:3468
+   BASE_URL=http://127.0.0.1:3468
    ```
 
 
