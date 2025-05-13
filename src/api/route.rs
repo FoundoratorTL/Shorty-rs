@@ -1,7 +1,7 @@
 use axum::Router;
 use std::sync::Arc;
 
-use crate::api::{AppState, service::healthcheck::healthcheck_router};
+use crate::api::{AppState};
 use crate::api::service::create_service_router;
 use crate::api::v1::router as v1_router;
 

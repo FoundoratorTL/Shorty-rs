@@ -1,6 +1,7 @@
 use axum::{extract::{State, Json}, http::StatusCode};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
+use std::time::{Instant};
 use sqlx::query;
 use crate::api::AppState;
 use crate::errors::AppError;
@@ -22,6 +23,8 @@ pub async fn handle(
     Json(payload): Json<CreateRequest>,
 ) -> Result<Json<CreateResponse>, AppError> {
     let pool = &state.pool;
+    // Start the timer
+    let start_time = Instant::now();
 
     // Basic URL validation
     if !payload.url.starts_with("http://") && !payload.url.starts_with("https://") {
@@ -45,6 +48,18 @@ pub async fn handle(
     let base = std::env::var("BASE_URL").unwrap_or_default();
     let short_url = format!("{}/{}", base.trim_end_matches('/'), short_code);
 
+    // End the timer
+    let end_time = Instant::now();
+
+    // Calculate the duration
+    let duration = end_time - start_time;
+
+    // Print the result in various formats
+    println!("Execution took {:?}", duration);
+    println!("Execution took {} milliseconds", duration.as_millis());
+    println!("Execution took {} microseconds", duration.as_micros());
+    println!("Execution took {} nanoseconds", duration.as_nanos());
+    
     Ok(Json(CreateResponse {
         short_url,
     }))
